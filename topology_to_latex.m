@@ -26,7 +26,7 @@ connectionToLatex[param_Integer] := Module[{digits, is331},
     
     If[is331,
         (* Special 331 case: use \bigcirc *)
-        " \\overset{(" <> StringJoin[Riffle[ToString /@ digits, ","]] <> ")}{\\bigcirc} ",
+        " \\overset{3,3}{\\bigcirc} ",
         (* Normal case: use \otimes *)
         If[Length[digits] >= 2,
             " \\overset{" <> StringJoin[Riffle[ToString /@ digits, ","]] <> "}{\\otimes} ",

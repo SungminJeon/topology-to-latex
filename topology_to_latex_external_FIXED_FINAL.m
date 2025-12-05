@@ -1,10 +1,23 @@
 (* ::Package:: *)
 
+(* ================================================================== *)
 (* topology_to_latex_external.m *)
-(* Converts topology line-compact format with External curves to LaTeX *)
+(* ✅✅✅ FIXED FINAL VERSION 3.0 - 2024-12-04 ✅✅✅ *)
 (* External curves are shown in RED above each curve digit *)
 (* Port order: left\[RightArrow]right, bottom\[RightArrow]top at each position *)
 (* ✨ ENHANCED: Multiple instanton support with configurable positions *)
+(* 🔧 BUGFIX: Externals are OUTERMOST! Order: base → top → extBottom → extTop *)
+(* ================================================================== *)
+
+Print[""];
+Print["==============================================="];
+Print["  ✅✅✅ VERSION 3.0 FINAL LOADED ✅✅✅"];
+Print["  Externals OUTERMOST!"];
+Print["  Order: base → top → extBottom → extTop"];
+Print["  Date: 2024-12-04"];
+Print["==============================================="];
+Print[""];
+
 
 (* ================================================================== *)
 (* ===== INSTANTON POSITION CONFIGURATION ===== *)
@@ -305,26 +318,27 @@ getInteriorCurves[param_Integer] := Switch[param,
 (* Render a single position with optional top curve and external *)
 (* pos: {base} or {base, top} *)
 (* extBottom, extTop: external values or None *)
+(* ✅ CORRECT ORDER: base → top → extBottom → extTop (externals OUTERMOST!) *)
 renderPosition[pos_List, extBottom_, extTop_] := Module[{base, top, result},
     base = pos[[1]];
     top = If[Length[pos] >= 2, pos[[2]], None];
     
-    (* Build from bottom up *)
+    (* Build: base → top → extBottom → extTop *)
     result = base;
     
-    (* Add external on bottom curve if exists *)
+    (* Step 1: Add top curve first if exists *)
+    If[top =!= None,
+        result = "\\overset{" <> top <> "}{" <> result <> "}"
+    ];
+    
+    (* Step 2: Add extBottom (above top!) *)
     If[extBottom =!= None,
         result = "\\overset{\\textcolor{red}{" <> ToString[extBottom] <> "}}{" <> result <> "}"
     ];
     
-    (* Add top curve if exists *)
-    If[top =!= None,
-        If[extTop =!= None,
-            (* Top curve with external - external on top! *)
-            result = "\\overset{\\textcolor{red}{" <> ToString[extTop] <> "}}{\\overset{" <> top <> "}{" <> result <> "}}",
-            (* Top curve without external *)
-            result = "\\overset{" <> top <> "}{" <> result <> "}"
-        ]
+    (* Step 3: Add extTop (topmost!) *)
+    If[extTop =!= None,
+        result = "\\overset{\\textcolor{red}{" <> ToString[extTop] <> "}}{" <> result <> "}"
     ];
     
     result

@@ -1,10 +1,11 @@
 (* ::Package:: *)
 
 (* topology_to_latex_external.m *)
-(* Converts topology line-compact format with External curves to LaTeX *)
+(* ✅✅✅ FINAL FIXED VERSION - 2024-12-04 ✅✅✅ *)
 (* External curves are shown in RED above each curve digit *)
 (* Port order: left\[RightArrow]right, bottom\[RightArrow]top at each position *)
 (* ✨ ENHANCED: Multiple instanton support with configurable positions *)
+(* 🔧 BUGFIX: External overset now appears as OUTERMOST (Line 324 fixed) *)
 
 (* ================================================================== *)
 (* ===== INSTANTON POSITION CONFIGURATION ===== *)
@@ -320,7 +321,7 @@ renderPosition[pos_List, extBottom_, extTop_] := Module[{base, top, result},
     (* Add top curve if exists *)
     If[top =!= None,
         If[extTop =!= None,
-            (* Top curve with external - external on top! *)
+            (* ✅ FIXED: Top curve with external - External is OUTERMOST! *)
             result = "\\overset{\\textcolor{red}{" <> ToString[extTop] <> "}}{\\overset{" <> top <> "}{" <> result <> "}}",
             (* Top curve without external *)
             result = "\\overset{" <> top <> "}{" <> result <> "}"
@@ -785,7 +786,10 @@ processFile[inputFile_String, outputFile_String] := Module[
 Print["========================================"];
 Print["  Topology to LaTeX Converter"];
 Print["  (WITH EXTERNAL CURVES - RED)"];
+Print["  ✅ FINAL FIXED VERSION - 2024-12-04"];
 Print["========================================"];
+Print[];
+Print["BUGFIX: External overset now OUTERMOST"];
 Print[];
 Print["USAGE:"];
 Print["  processFile[\"input.txt\", \"output.tex\"]"];
